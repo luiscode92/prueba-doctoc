@@ -67,4 +67,4 @@ Serás invitado a una entrevista con nosotros. Durante la entrevista:
 
 Una vez cumplidos los requisitos, puedes solicitar la revisión de tu evaluación en [este enlace](https://cal.com/josedrz/revision-de-prueba-tecnica). 
 
-**La evaluación estará abierta para revisión hasta el 18 de agosto de 2023**
+**La evaluación estará abierta para revisión hasta el 25 de agosto de 2023**
