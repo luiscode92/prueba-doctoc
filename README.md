@@ -2,9 +2,9 @@
 
 El propósito de esta evaluación técnica es evaluar tus habilidades en el manejo del conjunto de herramientas que empleamos en nuestra operación diaria.
 
-## Antecedentes
+## Contexto
 
-Un médico asociado a nuestra red necesita un mecanismo efectivo y en tiempo real para gestionar sus citas. Para satisfacer esta necesidad, estamos buscando desarrollar una aplicación web que permita visualizar, crear, modificar y eliminar citas.
+Un médico asociado a nuestra red podría necesitar un mecanismo efectivo y en tiempo real para gestionar sus citas. Para satisfacer esta necesidad, estamos buscando desarrollar una aplicación web que permita visualizar, crear, modificar y eliminar citas.
 
 La aplicación requerirá el uso de Next.js, Typescript y Tailwind para el frontend, Apollo para el manejo de peticiones, y GraphQL para la creación de un middleware que permita la comunicación con nuestros microservicios. Los detalles de la API los puedes encontrar [aquí](https://documenter.getpostman.com/view/12354386/2s9XxySZ7M). Se permite la utilización de bibliotecas basadas en Tailwind como TailwindUI o Shadcn.UI. Si lo cree conveniente puede usar redux para el manejo del estado global.
 
@@ -57,14 +57,12 @@ Serás invitado a una entrevista con nosotros. Durante la entrevista:
 - Deberás explicar el código que has escrito y las decisiones que has tomado.
 - Añadiremos un nuevo filtro a la aplicación y tendrás que implementarlo.
 
-¡Mucho éxito!
+Una vez cumplidos los requisitos, puedes solicitar la revisión de tu evaluación en [este enlace](https://cal.com/josedrz/revision-de-prueba-tecnica). 
+
+**La evaluación estará abierta para revisión hasta el 25 de agosto de 2023**
 
 ## Referencias
 
 - Diseño de la aplicación de agendamiento médico por Doctoc: https://www.figma.com/file/YfkeNoNQ1bCMuruu3Pox8r/Prueba-t%C3%A9cnica---Doctoc?type=design&node-id=1%3A2&mode=design&t=ztqsm2n33wzQUliD-1
 
 - Documentación de la API: https://documenter.getpostman.com/view/12354386/2s9XxySZ7M
-
-Una vez cumplidos los requisitos, puedes solicitar la revisión de tu evaluación en [este enlace](https://cal.com/josedrz/revision-de-prueba-tecnica). 
-
-**La evaluación estará abierta para revisión hasta el 25 de agosto de 2023**
