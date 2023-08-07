@@ -6,7 +6,7 @@ El propósito de esta evaluación técnica es evaluar tus habilidades en el mane
 
 Un médico asociado a nuestra red podría necesitar un mecanismo efectivo y en tiempo real para gestionar sus citas. Para satisfacer esta necesidad, estamos buscando desarrollar una aplicación web que permita visualizar, crear, modificar y eliminar citas.
 
-La aplicación requerirá el uso de Next.js, Typescript y Tailwind para el frontend, Apollo para el manejo de peticiones, y GraphQL para la creación de un middleware que permita la comunicación con nuestros microservicios. Los detalles de la API los puedes encontrar [aquí](https://documenter.getpostman.com/view/12354386/2s9XxySZ7M). Se permite la utilización de bibliotecas basadas en Tailwind como TailwindUI o Shadcn.UI. Si lo cree conveniente puede usar redux para el manejo del estado global.
+La aplicación requerirá el uso de Next.js, Typescript y Tailwind para el frontend, Apolo para el manejo de peticiones, y GraphQL para la creación de un middleware que permita la comunicación con nuestros microservicios. Los detalles de la API los puedes encontrar [aquí](https://documenter.getpostman.com/view/12354386/2s9XxySZ7M). Se permite la utilización de bibliotecas basadas en Tailwind como TailwindUI o Shadcn.UI. Si lo cree conveniente puede usar redux para el manejo del estado global.
 
 Para la actualización en tiempo real de la agenda, será necesario implementar WebSockets.
 
