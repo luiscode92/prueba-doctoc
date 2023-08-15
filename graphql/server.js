@@ -6,6 +6,7 @@ const resolvers = require('./resolvers');
 const server = new ApolloServer({ typeDefs, resolvers });
 
 const app = express();
+//app.use(compression());
 
 // Make sure to await server.start() before applyMiddleware
 (async () => {

@@ -32,6 +32,11 @@ const typeDefs = gql`
 
   input AppointmentInput {
     resourceType: String!
+    resourceData: ResourceDataInput!
+}
+
+  input ResourceDataInput {
+    resourceType: String!
     status: String!
     serviceType: [ServiceTypeInput!]!
     start: String!
@@ -66,7 +71,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createCita(appointment: AppointmentInput!): Appointment!
+    createAppointment(appointment: AppointmentInput!): Appointment!
     updateCita(id: ID!, appointment: AppointmentInput!): Appointment!
     deleteCita(id: ID!): Boolean!
   }
