@@ -7,45 +7,66 @@ const HEADERS = {
 
 const resolvers = {
   Query: {
-    cita: async (_, { id }) => {
-      const response = await axios.post(
-        'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/getResource',
-        { resourceType: "Appointment", resourceId: id },
-        { headers: HEADERS }
-      );
-      console.log(response.data);
-      return response.data.data;
+    appointment: async (_, { id }) => {
+      try {
+        const response = await axios.post(
+          'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/getResource',
+          { resourceType: "Appointment", resourceId: id },
+          { headers: HEADERS }
+        );
+        console.log(response.data);
+        return response.data.data;
+      } catch(error) {
+        console.error("Error creating appointment:", error);
+        throw new Error("Failed to create appointment in API");
+      }
+    
     },
-    citasByDate: async (_, { date }) => {
-      const response = await axios.post(
-        'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/searchResource',
-        { resourceType: "Appointment", params: { date } },
-        { headers: HEADERS }
-      );
-      console.log(response.data);
-      return response.data.data;
+    appointmentsByDate: async (_, { date }) => {
+      try {
+        const response = await axios.post(
+          'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/searchResource',
+          { resourceType: "Appointment", params: { date } },
+          { headers: HEADERS }
+        );
+        console.log(response.data);
+        return response.data.data;
+      } catch(error) {
+        console.error("Error creating appointment:", error);
+        throw new Error("Failed to create appointment in API");
+      }
     },
     searchPatients: async (_, { family }) => {
-      const response = await axios.post(
-        'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/searchResource',
-        { resourceType: "Patient", params: { "family:contains": family } },
-        { headers: HEADERS }
-      );
-      console.log(response.data);
-      return response.data.data;
+      try {
+        const response = await axios.post(
+          'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/searchResource',
+          { resourceType: "Patient", params: { "family:contains": family } },
+          { headers: HEADERS }
+        );
+        console.log(response.data);
+        return response.data.data;
+      } catch(error) {
+        console.error("Error creating appointment:", error);
+        throw new Error("Failed to create appointment in API");
+      }
     },
     searchDoctors: async (_, { family }) => {
-      const response = await axios.post(
-        'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/searchResource',
-        { resourceType: "Practitioner", params: { "family:contains": family } },
-        { headers: HEADERS }
-      );
-      console.log(response.data);
-      return response.data.data;
+      try {
+        const response = await axios.post(
+          'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/searchResource',
+          { resourceType: "Practitioner", params: { "family:contains": family } },
+          { headers: HEADERS }
+        );
+        console.log(response.data);
+        return response.data.data;
+      } catch(error) {
+        console.error("Error creating appointment:", error);
+        throw new Error("Failed to create appointment in API");
+      }
     }
   },
   Mutation: {
-    createAppointment: async (_, { appointment }) => {
+     createAppointment: async (_, { appointment }) => {
       try {
           const response = await axios.post(
               'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/createResource',
@@ -111,7 +132,6 @@ const resolvers = {
         throw new Error(errorMessage);
       }
     }
-    
   },
 };
 

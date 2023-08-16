@@ -29,19 +29,18 @@ const typeDefs = gql`
     start: String!
     end: String!
     participant: [Participant!]!
-    
   }
 
   type DeleteAppointmentResponse {
     resourceType: String!
     resourceId: ID!
     status: String!
-}
+  }
 
   input AppointmentInput {
     resourceType: String!
     resourceData: ResourceDataInput!
-}
+  }
 
   input ResourceDataInput {
     resourceType: String!
@@ -72,8 +71,8 @@ const typeDefs = gql`
   }
 
   type Query {
-    cita(id: ID!): Appointment
-    citasByDate(date: String!): [Appointment!]!
+    appointment(id: ID!): Appointment
+    appointmentsByDate(date: String!): [Appointment!]!
     searchPatients(family: String): [Actor!]!
     searchDoctors(family: String): [Actor!]!
   }
