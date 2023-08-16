@@ -58,31 +58,60 @@ const resolvers = {
           if (!response.data.resourceData) {
               throw new Error("Invalid API response");
           }
-          
           return response.data.resourceData;
       } catch(error) {
           console.error("Error creating appointment:", error);
           throw new Error("Failed to create appointment in API");
       }
-  },
-    updateCita: async (_, { id, appointment }) => {
-      const response = await axios.post(
-        'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/updateResource',
-        { ...appointment, resourceId: id },
-        { headers: HEADERS }
-      );
-      console.log(response.data);
-      return response.data.data;
     },
-    deleteCita: async (_, { id }) => {
-      const response = await axios.post(
-        'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/deleteResource',
-        { resourceType: "Appointment", resourceId: id },
-        { headers: HEADERS }
-      );
-      console.log(response.data);
-      return response.data.data;
+    updateAppointment: async (_, { id, appointment }) => {
+      try {
+        const response = await axios.post(
+            'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/updateResource',
+            { ...appointment, resourceId: id },
+            { headers: HEADERS }
+        );
+        console.log("API Response:", response.data);
+        // Check if response.data.resourceData is valid before returning
+        if (!response.data.resourceData) {
+            throw new Error("Invalid API response");
+        }
+        return response.data.resourceData;
+      } catch(error) {
+        console.error("Error updating appointment:", error);
+        
+        // Check if the error response from API contains a message and include that in the error thrown
+        let errorMessage = error.message;
+        if (error.response && error.response.data) {
+            errorMessage += ` - ${error.response.data}`;
+        }
+        
+        throw new Error(errorMessage);
+      }
+    },
+    deleteAppointment: async (_, { id }) => {
+      try {
+        const response = await axios.post(
+          'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/deleteResource',
+          { resourceType: "Appointment", resourceId: id},
+          { headers: HEADERS }
+        );
+        console.log("API Response:", response.data);
+  
+        return response.data;
+      } catch (error) {
+        console.error("Error deleting appointment:", error);
+        
+        // Check if the error response from API contains a message and include that in the error thrown
+        let errorMessage = error.message;
+        if (error.response && error.response.data) {
+            errorMessage += ` - ${error.response.data}`;
+        }
+        
+        throw new Error(errorMessage);
+      }
     }
+    
   },
 };
 

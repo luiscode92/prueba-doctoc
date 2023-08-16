@@ -21,6 +21,7 @@ const typeDefs = gql`
   }
 
   type Appointment {
+    resourceId: ID!
     id: ID
     resourceType: String!
     status: String!
@@ -28,7 +29,14 @@ const typeDefs = gql`
     start: String!
     end: String!
     participant: [Participant!]!
+    
   }
+
+  type DeleteAppointmentResponse {
+    resourceType: String!
+    resourceId: ID!
+    status: String!
+}
 
   input AppointmentInput {
     resourceType: String!
@@ -72,8 +80,8 @@ const typeDefs = gql`
 
   type Mutation {
     createAppointment(appointment: AppointmentInput!): Appointment!
-    updateCita(id: ID!, appointment: AppointmentInput!): Appointment!
-    deleteCita(id: ID!): Boolean!
+    updateAppointment(id: ID!, appointment: AppointmentInput!): Appointment!
+    deleteAppointment(id: ID!): DeleteAppointmentResponse!
   }
 `;
 
