@@ -60,7 +60,7 @@ const resolvers = {
                         }
                     }
                 });
-
+                console.log(response.data)
                 return {
                     operation: response.data.operation,
                     resourcesFound: response.data.resourcesFound.quantity,
@@ -81,14 +81,18 @@ const resolvers = {
                         'Content-Type': 'application/json'
                     },
                     data: {
-                        resourceType: "Practitioner",
+                        resourceType: 'Practitioner',
                         params: {
                             "family:contains": familyContains
                         }
                     }
                 });
-      
-              return response.data.resourcesFound;
+                console.log(response.data)
+                return {
+                    operation: response.data.operation,
+                    resourcesFound: response.data.resourcesFound.quantity,
+                    resourcesData: response.data.resourcesFound.resourcesData
+                };
             } catch (error) {
               console.error('Failed to fetch from FHIR endpoint:', error);
               throw new Error('Failed to fetch from FHIR endpoint.');

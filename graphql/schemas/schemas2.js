@@ -6,7 +6,7 @@ type Query {
     getAppointment(resourceId: ID!): AppointmentResponse
     searchAppointmentsByDate(date: String!): AppointmentResponse!
     searchPatients(familyContains: String!): SearchResponse
-    searchPractitioner(familyContains: String!): ResourcesFound
+    searchPractitioner(familyContains: String!): SearchPracticionerResponse
 }
 
 type ResourcesFound {
@@ -116,13 +116,17 @@ type Search {
 
 
 ##serachDoctor
-type PractitionerSearchResult {
-    fullUrl: String
-    resource: Practitioner
-    search: Search
+type SearchPracticionerResponse {
+    quantity: Int
+    resourcesData: [PractitionerResoultData]
 }
 
-type Practitioner {
+type PractitionerResoultData {
+    fullUrl: String
+    resource: PractitionerResult
+    search: Search
+}
+type PractitionerResult {
     active: Boolean
     address: [Address]
     gender: String
@@ -134,25 +138,15 @@ type Practitioner {
     telecom: [Telecom]
 }
 
-type Telecom {
-    system: String
-    use: String
-    value: String
-}
-
-type Resource {
-    id: String!
-    name: [Name!]!
-}
-
 type Name {
     family: String
     given: [String]
     prefix: [String]
 }
-
-type Identifier {
+  
+type Telecom {
     system: String
+    use: String
     value: String
 }
 
@@ -162,8 +156,12 @@ type Address {
     line: [String]
     postalCode: String
     state: String
-}
-
+  }
+  
+  type Identifier {
+    system: String
+    value: String
+  }
 
 `;
 
