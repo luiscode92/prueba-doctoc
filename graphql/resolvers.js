@@ -7,35 +7,34 @@ const HEADERS = {
 
 const resolvers = {
   Query: {
-    appointment: async (_, { id }) => {
+    getAppointment: async (_, { id }) => {
       try {
         const response = await axios.post(
           'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/getResource',
           { resourceType: "Appointment", resourceId: id },
           { headers: HEADERS }
-        );
+        ); 
         console.log(response.data);
-        return response.data.data;
+        return response.data;
       } catch(error) {
         console.error("Error creating appointment:", error);
         throw new Error("Failed to create appointment in API");
       }
-    
     },
-    appointmentsByDate: async (_, { date }) => {
+    appointmentsByDate: async (_, { resourceType, date }) => {
       try {
-        const response = await axios.post(
-          'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/searchResource',
-          { resourceType: "Appointment", params: { date } },
-          { headers: HEADERS }
-        );
-        console.log(response.data);
-        return response.data.data;
+          const response = await axios.post(
+              'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/searchResource',
+              { resourceType, params: { date } },
+              { headers: HEADERS }
+          );
+          console.log(response.data)
+          return response.data ;
       } catch(error) {
-        console.error("Error creating appointment:", error);
-        throw new Error("Failed to create appointment in API");
+          console.error("Error fetching appointments:", error);
+          throw new Error(`Failed to fetch ${resourceType}s for the given date`);
       }
-    },
+  },
     searchPatients: async (_, { family }) => {
       try {
         const response = await axios.post(
@@ -44,7 +43,7 @@ const resolvers = {
           { headers: HEADERS }
         );
         console.log(response.data);
-        return response.data.data;
+        return response.data;
       } catch(error) {
         console.error("Error creating appointment:", error);
         throw new Error("Failed to create appointment in API");
@@ -58,7 +57,7 @@ const resolvers = {
           { headers: HEADERS }
         );
         console.log(response.data);
-        return response.data.data;
+        return response.data;
       } catch(error) {
         console.error("Error creating appointment:", error);
         throw new Error("Failed to create appointment in API");
@@ -66,23 +65,28 @@ const resolvers = {
     }
   },
   Mutation: {
-     createAppointment: async (_, { appointment }) => {
+    createAppointment: async (_, { Appointment }) => {
       try {
           const response = await axios.post(
               'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/createResource',
-              appointment,
+              Appointment,
               { headers: HEADERS }
           );
-          console.log("API Response:", response.data);
-          
-          // Check if response.data.resourceData is valid before returning
           if (!response.data.resourceData) {
               throw new Error("Invalid API response");
           }
-          return response.data.resourceData;
+          console.log(response.data);
+          return response.data;
       } catch(error) {
-          console.error("Error creating appointment:", error);
-          throw new Error("Failed to create appointment in API");
+        console.error("Error updating appointment:", error);
+        
+        // Check if the error response from API contains a message and include that in the error thrown
+        let errorMessage = error.message;
+        if (error.response && error.response.data) {
+            errorMessage += ` - ${error.response.data}`;
+        }
+        
+        throw new Error(errorMessage);
       }
     },
     updateAppointment: async (_, { id, appointment }) => {
@@ -97,7 +101,7 @@ const resolvers = {
         if (!response.data.resourceData) {
             throw new Error("Invalid API response");
         }
-        return response.data.resourceData;
+        return response.data;
       } catch(error) {
         console.error("Error updating appointment:", error);
         
