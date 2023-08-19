@@ -37,7 +37,6 @@ const resolvers = {
                         }
                     }
                 );
-
                 return response.data;
             } catch (error) {
                 console.error("Failed to fetch appointments:", error);

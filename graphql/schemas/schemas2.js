@@ -90,7 +90,7 @@ type Patient {
 type ResourcesData {
     fullUrl: String!
     resource: Patient!
-    searchMode: String!
+    search: Search
 }
 type SearchResponse {
     operation: String!
