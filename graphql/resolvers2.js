@@ -1,4 +1,7 @@
 const axios = require('axios');
+require('dotenv').config();
+const token = process.env.API_ACCESS_TOKEN;
+
 
 const resolvers = {
     Query: {
@@ -12,7 +15,7 @@ const resolvers = {
 
             const headers = {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb3NlNDU2bGh5b0BnbWFpbC5jb20iLCJpYXQiOjE2OTEyNjg1MTQ3MzMsImV4cCI6MTY5MTI2OTExOTUzM30.QUBRQX1cehzJywR_1ks0ak1LX5IuhY71hwdpGinpkNY' // Make sure to securely handle and store tokens in a real implementation
+                'Authorization': `Bearer ${token}` // Make sure to securely handle and store tokens in a real implementation
             };
 
             try {
@@ -32,7 +35,7 @@ const resolvers = {
                     },
                     {
                         headers: {
-                            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb3NlNDU2bGh5b0BnbWFpbC5jb20iLCJpYXQiOjE2OTEyNjg1MTQ3MzMsImV4cCI6MTY5MTI2OTExOTUzM30.QUBRQX1cehzJywR_1ks0ak1LX5IuhY71hwdpGinpkNY',
+                            'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'
                         }
                     }
@@ -49,7 +52,7 @@ const resolvers = {
                     method: 'POST',
                     url: 'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/searchResource',
                     headers: {
-                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb3NlNDU2bGh5b0BnbWFpbC5jb20iLCJpYXQiOjE2OTEyNjg1MTQ3MzMsImV4cCI6MTY5MTI2OTExOTUzM30.QUBRQX1cehzJywR_1ks0ak1LX5IuhY71hwdpGinpkNY',
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                     data: {
@@ -76,7 +79,7 @@ const resolvers = {
                     method: 'POST',
                     url: 'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/searchResource',
                     headers: {
-                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb3NlNDU2bGh5b0BnbWFpbC5jb20iLCJpYXQiOjE2OTEyNjg1MTQ3MzMsImV4cCI6MTY5MTI2OTExOTUzM30.QUBRQX1cehzJywR_1ks0ak1LX5IuhY71hwdpGinpkNY',
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                     data: {
@@ -97,6 +100,28 @@ const resolvers = {
               throw new Error('Failed to fetch from FHIR endpoint.');
             }
           }
+
+    },
+    Mutation: {
+        createAppointment: async (_, { input }) => {
+            try {
+                const response = await axios({
+                    method: 'POST',
+                    url: 'https://us-central1-doctoc-test-f0d7b.cloudfunctions.net/createResource',
+                    headers: {
+                        'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb3NlNDU2bGh5b0BnbWFpbC5jb20iLCJpYXQiOjE2OTEyNjg1MTQ3MzMsImV4cCI6MTY5MTI2OTExOTUzM30.QUBRQX1cehzJywR_1ks0ak1LX5IuhY71hwdpGinpkNY`,
+                        'Content-Type': 'application/json'
+                    },
+                    data: input
+                });
+                console.log(response.data)
+                return response.data;
+
+            } catch (error) {
+                console.error("Error creating appointment:", error);
+                throw new Error("Failed to create appointment");
+            }
+        }
 
     }
 };

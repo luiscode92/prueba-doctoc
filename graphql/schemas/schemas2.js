@@ -156,12 +156,95 @@ type Address {
     line: [String]
     postalCode: String
     state: String
-  }
+}
   
-  type Identifier {
+type Identifier {
     system: String
     value: String
-  }
+}
+
+
+############### MUTATIONS ######################
+type Mutation {
+    createAppointment(input: AppointmentDataInput!): CreateAppointmentResponse
+}
+
+input AppointmentInput {
+    operation: String!
+    resourceType: String!
+    resourceData: AppointmentDataInput
+}
+
+input AppointmentDataInput {
+    end: String!
+    meta: MetaInput
+    participant: [ParticipantInput!]
+    resourceType: String!
+    serviceType: [ServiceTypeInput!]
+    start: String!
+    status: String!
+    resourceData: AppointmentDataInput
+}
+
+input MetaInput {
+    lastUpdated: String!
+    versionId: String!
+}
+
+type CreateAppointmentResponse {
+    operation: String
+    resourceType: String
+    resourceData: ResourceDataRes
+}
+type ResourceDataRes {
+    end: String!
+    id: ID!
+    meta: Meta
+    participant: 
+    resourceType
+    serviceType
+    start
+    tatus
+}
+
+input ServiceTypeInput {
+    coding: [CodingInput!]
+}
+
+input CodingInput {
+    code: String!
+    display: String!
+    system: String!
+}
+
+input ActorInput {
+    reference: String!
+}
+
+input ParticipantInput {
+    actor: ActorInput!
+    status: String!
+}
+
+
+input ResourceDetailsInput {
+    end: String!
+    id: String!
+    meta: MetaInput!
+    participant: [ParticipantInput!]!
+    resourceType: String!
+    serviceType: [ServiceTypeInput!]!
+    start: String!
+    status: String!
+}
+
+input SearchDetailsInput {
+    mode: String!
+}
+
+input ServiceTypeInput {
+    coding: [CodingInput!]
+}
 
 `;
 
