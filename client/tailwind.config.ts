@@ -24,8 +24,15 @@ const config: Config = {
           '900': '#101828',
           '300': '#D0D5DD',
           '200': '#EAECF0',
+          '700': '#344054',
         }
       },
+      fontFamily: {
+        'inter': ['Inter', 'sans-serif'],
+      },
+      fontWeight: {
+        'medium': '500',
+      }
     },
   },
   plugins: [],
