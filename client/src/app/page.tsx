@@ -1,6 +1,6 @@
 import Image from 'next/image'
-import Header from './components/header'
-import Main from './components/MainCard'
+
+import Main from './components/MainContainer'
 
 export default function Home() {
   return (
@@ -9,7 +9,7 @@ export default function Home() {
         hi
       </div>
       <div className="flex-grow flex-col h-screen bg-gray-50 ">
-        <Header/>
+        
         <Main/>
       </div>
     </main>

@@ -5,11 +5,10 @@ import { toggleModal } from '@/redux2/features/modalSlice'
 export default function Header() {
   const isOpen = useAppSelector(state => state.modalReducer.isOpen)
   const modalDispatch = useAppDispatch()
-  console.log(isOpen)
+
   return (
     <div className="flex justify-between items-center p-8 ">
         <div className="flex flex-col">
-            {isOpen ? "true" : "false"}
             <h1 className="text-xl font-bold text-left text-[30px] font-inter font-semibold leading-[38px] tracking-normal">Agenda</h1>
             <h2 className="text-sm text-gray-600 text-left text-md font-inter font-normal leading-6 tracking-normal">Manage your team members and their account permissions here.</h2>
         </div>
