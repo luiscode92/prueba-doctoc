@@ -5,14 +5,15 @@ const typeDefs = gql`
 type Query {
     getAppointment(resourceId: ID!): AppointmentResponse
     searchAppointmentsByDate(date: String!): AppointmentResponse!
-    searchPatients(familyContains: String!): SearchResponse
-    searchPractitioner(familyContains: String!): SearchPracticionerResponse
+    searchPatients(familyContains: String!): searchPatientsResponse
+    searchPractitioner(familyContains: String!): SearchPracticionerResponse!
 }
 
 type ResourcesFound {
     quantity: Int!
     resourcesData: [AppointmentData]
 }
+
 
 type AppointmentResponse {
     operation: String!
@@ -92,10 +93,9 @@ type ResourcesData {
     resource: Patient!
     search: Search
 }
-type SearchResponse {
+type searchPatientsResponse {
     operation: String!
-    resourcesFound: Int!
-    resourcesData: [ResourcesData!]!
+    resourcesFound: ResourcesFoundType!
 }
 
 type PatientName {
@@ -117,6 +117,12 @@ type Search {
 
 ##serachDoctor
 type SearchPracticionerResponse {
+    operation: String!
+    resourcesFound: ResourcesFoundType!
+
+}
+
+type ResourcesFoundType {
     quantity: Int
     resourcesData: [PractitionerResoultData]
 }
@@ -166,59 +172,34 @@ type Identifier {
 
 ############### MUTATIONS ######################
 type Mutation {
-    createAppointment(input: AppointmentDataInput!): CreateAppointmentResponse
+    createAppointment(input: createAppointmentInput!): createAppointmentResponse
+    updateAppointment(input: updateAppointmentInput!): updateAppointmentResponse
+    deleteAppointment(input: deleteAppointmentInput): deletedAppointmentResponse
 }
 
-input AppointmentInput {
-    operation: String!
+input createAppointmentInput {
     resourceType: String!
-    resourceData: AppointmentDataInput
+    resourceData: AppointmentResourceDataInput!
 }
 
-input AppointmentDataInput {
-    end: String!
-    meta: MetaInput
-    participant: [ParticipantInput!]
+input AppointmentResourceDataInput {
     resourceType: String!
-    serviceType: [ServiceTypeInput!]
-    start: String!
+    id: ID
     status: String!
-    resourceData: AppointmentDataInput
-}
-
-input MetaInput {
-    lastUpdated: String!
-    versionId: String!
-}
-
-type CreateAppointmentResponse {
-    operation: String
-    resourceType: String
-    resourceData: ResourceDataRes
-}
-type ResourceDataRes {
+    serviceType: [ServiceTypeInput!]!
+    start: String!
     end: String!
-    id: ID!
-    meta: Meta
-    participant: 
-    resourceType
-    serviceType
-    start
-    tatus
+    participant: [ParticipantInput!]!
 }
 
 input ServiceTypeInput {
-    coding: [CodingInput!]
+    coding: [CodingInput!]!
 }
 
 input CodingInput {
+    system: String!
     code: String!
     display: String!
-    system: String!
-}
-
-input ActorInput {
-    reference: String!
 }
 
 input ParticipantInput {
@@ -226,25 +207,82 @@ input ParticipantInput {
     status: String!
 }
 
+input ActorInput {
+    reference: String!
+}
 
-input ResourceDetailsInput {
-    end: String!
-    id: String!
-    meta: MetaInput!
-    participant: [ParticipantInput!]!
+type createAppointmentResponse {
+    operation: String!
     resourceType: String!
-    serviceType: [ServiceTypeInput!]!
+    resourceId: String
+    resourceData: AppointmentResourceData!
+}
+
+type AppointmentResourceData {
+    resourceType: String!
+    status: String!
+    serviceType: [ServiceType!]!
     start: String!
+    end: String!
+    participant: [Participant!]!
+    id: String
+    meta: Meta
+}
+
+type ServiceType {
+    coding: [Coding!]!
+}
+
+type Coding {
+    system: String!
+    code: String!
+    display: String!
+}
+
+type Participant {
+    actor: Actor!
     status: String!
 }
 
-input SearchDetailsInput {
-    mode: String!
+type Actor {
+    reference: String!
 }
 
-input ServiceTypeInput {
-    coding: [CodingInput!]
+type Meta {
+    lastUpdated: String!
+    versionId: String!
 }
+
+##update
+
+type updateAppointmentResponse {
+    operation: String!
+    resourceId: String!
+    resourceType: String!
+    resourceData: AppointmentResourceData!
+}
+
+input updateAppointmentInput {
+    resourceType: String!
+    resourceData: AppointmentResourceDataInput!
+    resourceId: String!
+}
+
+####delete
+
+input deleteAppointmentInput {
+    resourceId: String!
+    resourceType: String!
+}
+
+type deletedAppointmentResponse {
+    operation: String
+    resourceId: String!
+    resourceType: String!
+}
+  
+
+
 
 `;
 
