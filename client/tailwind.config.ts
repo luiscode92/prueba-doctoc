@@ -24,7 +24,6 @@ const config: Config = {
           '900': '#101828',
           '300': '#D0D5DD',
           '200': '#EAECF0',
-<<<<<<< HEAD
           '700': '#344054',
         }
       },
@@ -34,10 +33,6 @@ const config: Config = {
       fontWeight: {
         'medium': '500',
       }
-=======
-        }
-      },
->>>>>>> 7cd433964e8f32df8d371b29035755e2373f49dd
     },
   },
   plugins: [],
