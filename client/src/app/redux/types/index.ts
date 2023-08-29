@@ -3,8 +3,12 @@ import {
     CREATE_APPOINTMENT_SUCCESS,
     CREATE_APPOINTMENT_ERROR,
   } from '../actions/appointmentActions';
+<<<<<<< HEAD
 
   // Types for the appointment state
+=======
+// Types for the appointment state
+>>>>>>> 7cd433964e8f32df8d371b29035755e2373f49dd
 export interface AppointmentState {
     appointments: Appointment[];
     loading: boolean;
@@ -60,8 +64,11 @@ export interface AppointmentState {
     | CreateAppointmentRequestAction
     | CreateAppointmentSuccessAction
     | CreateAppointmentErrorAction;
+<<<<<<< HEAD
 
 
 //new appointment modal
  
+=======
+>>>>>>> 7cd433964e8f32df8d371b29035755e2373f49dd
   
