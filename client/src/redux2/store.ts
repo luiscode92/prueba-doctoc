@@ -1,11 +1,17 @@
 
 import { configureStore } from "@reduxjs/toolkit";
 import modalReducer from './features/modalSlice'
+import appointmentReducer from './features/appointmentSlice';
+import patientReducer from './features/patientSlice';
+import practitionerReducer from './features/practitionerSlice';
 
 
 export const store = configureStore({
     reducer: {
-        modalReducer
+        modalReducer,
+        appointmentReducer,
+        patientReducer,
+        practitionerReducer
     }
 })
 

@@ -2,6 +2,7 @@
 import { useAppDispatch, useAppSelector } from '@/redux2/hooks';
 import { toggleModal } from '@/redux2/features/modalSlice'
 
+
 export default function Header() {
   const isOpen = useAppSelector(state => state.modalReducer.isOpen)
   const modalDispatch = useAppDispatch()
@@ -16,8 +17,8 @@ export default function Header() {
         <div className="flex space-x-4">
             <button className="p-[10px] px-[16px] rounded-[8px] bg-primary-50 text-primary-700 rounded font-semibold text-sm">Día</button>
             <button className="p-[10px] px-[16px] rounded-[8px] bg-white text-gray-700 rounded border border-gray-300 font-semibold text-sm">Semana</button>
-            <button className="p-[10px] px-[16px] rounded-[8px] bg-primary-700 text-white border border-primary-600 rounded font-semibold text-sm"
-             onClick={() => {modalDispatch(toggleModal());}}>Nueva cita</button>
+            {!isOpen && <button className="p-[10px] px-[16px] rounded-[8px] bg-primary-700 text-white border border-primary-600 rounded font-semibold text-sm"
+             onClick={() => {modalDispatch(toggleModal());}}>Nueva cita</button>}
         </div>
     </div>
 

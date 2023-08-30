@@ -1,16 +1,30 @@
 'use client'
 import Header from './header'
+import { useEffect } from 'react';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useAppDispatch, useAppSelector } from '@/redux2/hooks';
 import { toggleModal } from '@/redux2/features/modalSlice'
+import {
+    fetchAppointment,
+    // other hooks..
+} from '@/redux2/features/appointmentSlice';
 import AppointmentCard from './AppointmentCard';
+import PatientCard from './PatientCard';
 
 
 export default function MainContainer() {
     const isOpen = useAppSelector(state => state.modalReducer.isOpen)
+    const dispatch = useAppDispatch()
     const modalDispatch = useAppDispatch()
     const o = false
+
+    useEffect(() => {
+        dispatch(fetchAppointment("092c8241-c870-47ab-b76c-5735dce6610e"));
+    }, []);
+
+    const appointment = useAppSelector((state) => state.appointmentReducer);
+    console.log(appointment);
     return (
         <div className="flex w-full">
             <div className={`flex flex-col ${isOpen ? 'flex-grow' : 'w-full'}`}>
@@ -43,6 +57,7 @@ export default function MainContainer() {
                         <p className="text-gray-900 text-center text-md font-inter font-semibold leading-6 tracking-normal">No se encontraron registros</p>
                         <p className="text-gray-600">El médico seleccionado no tiene ninguna cita el día de hoy.</p>
                     </div>
+                    <PatientCard/>
                 </div>
             </div>
             {isOpen && <AppointmentCard/>}

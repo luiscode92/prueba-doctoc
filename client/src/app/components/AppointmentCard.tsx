@@ -8,11 +8,11 @@ export default function AppointmentCard() {
        console.log(event?.target?.value)
     };
     return (
-        <div className="bg-white w-[622px] h-screen">
+        <div className="bg-white w-[622px] h-screen flex flex-col">
             <div className="h-[77px] flex items-center border-t-8 border-primary-700">
                 <h1 className="font-inter text-left text-lg font-semibold leading-7 tracking-normal ml-[24px]">Nueva cita</h1>
             </div>
-            <div className="border-t border-gray-200 p-[24px]">
+            <div className="border-t border-gray-200 p-[24px] flex-grow overflow-y-auto">
                 <div className="flex flex-col space-y-2">
                     <p className="text-sm font-medium text-gray-700 block">Médico</p>
                     <button className="w-[156px] h-[44px] rounded-[8px] bg-white text-gray-700 border border-gray-300 font-semibold text-sm flex items-center justify-center gap-[8px]">
@@ -79,7 +79,7 @@ export default function AppointmentCard() {
                 </div>
                 </div>
             </div>
-            <div className="flex flex-row items-center justify-between h-18 pr-6 pl-6 gap-2 box-border">
+            <div className="flex flex-row items-center justify-between h-18 pr-6 pl-6 gap-2 box-border  mt-auto">
                 <p className="flex-shrink-0 text-red-600 font-semibold text-sm">Cancelar</p>
                 <Button className="flex-shrink-0 w-25 h-10 text-white font-semibold text-sm bg-teal-600 border border-teal-700 rounded-lg shadow-sm cursor-pointer">Confirmar</Button>
             </div>
