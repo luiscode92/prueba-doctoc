@@ -1,9 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
 const token = process.env.API_ACCESS_TOKEN;
-const { PubSub } = require('apollo-server-express');
-const pubsub = new PubSub();
-
 
 
 const resolvers = {
