@@ -73,8 +73,25 @@ const appointmentSlice = createSlice({
     builder.addCase(fetchAppointment.fulfilled, (state, action) => {
       return action.payload;
     });
+    builder.addCase(searchAppointmentsByDate.fulfilled, (state, action) => { 
+      return action.payload;
+    })
     // Handle other thunks similarly...
   },
 });
+
+export const appointmentsByDateSlice = createSlice({
+  name: 'appointmentsByDateSlice',
+  initialState: [],
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(searchAppointmentsByDate.fulfilled, (state, action) => { 
+      return action.payload;
+    })
+
+  },
+});
+
+
 
 export default appointmentSlice.reducer;

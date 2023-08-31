@@ -23,7 +23,7 @@ const patientSlice = createSlice({
     builder.addCase(searchPatients.fulfilled, (state, action) => {
       return action.payload;
     });
-    // Handle other thunks similarly...
+
   },
 });
 

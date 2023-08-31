@@ -4,6 +4,7 @@ import modalReducer from './features/modalSlice'
 import appointmentReducer from './features/appointmentSlice';
 import patientReducer from './features/patientSlice';
 import practitionerReducer from './features/practitionerSlice';
+import appointmentsByDateSlice from './features/appointmentSlice'
 
 
 export const store = configureStore({
@@ -11,7 +12,8 @@ export const store = configureStore({
         modalReducer,
         appointmentReducer,
         patientReducer,
-        practitionerReducer
+        practitionerReducer,
+        appointmentsByDateSlice
     }
 })
 
