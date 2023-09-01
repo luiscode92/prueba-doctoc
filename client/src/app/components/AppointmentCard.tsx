@@ -1,12 +1,35 @@
-import { useCallback, useState, forwardRef } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Select, Option, Button, Input, MenuItem } from "@mui/base";
 import LaunchIcon from '@mui/icons-material/Launch';
+import {
+    fetchAppointment,
+    searchAppointmentsByDate,
+} from '@/redux2/features/appointmentSlice';
+import {searchPatients} from '@/redux2/features/patientSlice'
+import {searchPractitioner} from '@/redux2/features/practitionerSlice'
+import { useAppDispatch, useAppSelector } from '@/redux2/hooks';
 
 export default function AppointmentCard() {
+    const dispatch = useAppDispatch();
+
+    const [selectedDoctorIsOpen, setSelectedDoctorIsOpen] = useState<boolean>(false);
+    const [selectedDoctor, setSelectedDoctor] = useState<string>('');
+
+    const practitioners = useAppSelector(state => state.practitionerReducer);
+    const patients = useAppSelector(state => state.patientReducer);
+
+    useEffect(() => {
+        dispatch(searchPatients("sm"));
+     }, []);
+
+    console.log("Drs", practitioners)
+    console.log("patients", patients)
     const [age, setAge] = useState('');
-    const handleChange = (event: any) => {
-       console.log(event?.target?.value)
+    const handleSelectDrButton = (event: any) => {
+      setSelectedDoctorIsOpen(!selectedDoctorIsOpen)
     };
+
+
     return (
         <div className="bg-white w-[622px] h-screen flex flex-col">
             <div className="h-[77px] flex items-center border-t-8 border-primary-700">
@@ -15,12 +38,35 @@ export default function AppointmentCard() {
             <div className="border-t border-gray-200 p-[24px] flex-grow overflow-y-auto">
                 <div className="flex flex-col space-y-2">
                     <p className="text-sm font-medium text-gray-700 block">Médico</p>
-                    <button className="w-[156px] h-[44px] rounded-[8px] bg-white text-gray-700 border border-gray-300 font-semibold text-sm flex items-center justify-center gap-[8px]">
-                        <div className="flex ">
-                            <LaunchIcon className="w-[20px] h-[20px]"/>
+                    {!selectedDoctorIsOpen ? (
+                        <button onClick={handleSelectDrButton} className="w-[156px] h-[44px] rounded-[8px] bg-white text-gray-700 border border-gray-300 font-semibold text-sm flex items-center justify-center gap-[8px]">
+                            <div className="flex ">
+                                <LaunchIcon className="w-[20px] h-[20px]"/>
+                            </div>
+                            <p>Seleccionar</p>
+                        </button>
+                    ) : (
+                        <div className="w-[574px] border border-gray-300 rounded-[8px] bg-white">
+                        <div className="flex flex-col justify-start items-stretch">
+                            <div className="border bg-white mt-4">
+                                <div className="bg-gray-50 flex justify-center items-center h-10 px-6">
+                                    <p className="text-xs font-medium tracking-wide uppercase text-gray-500">A</p>
+                                </div>
+                                <div className="flex flex-col">
+                                    <div className="border-t border-solid"></div>
+                                    <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6">
+                                        <img className="w-10 h-10 object-cover block rounded-[20px] content-[url('https://s3-alpha-sig.figma.com/img/...')]" />
+                                        <div className="ml-4">
+                                            <p className="text-sm font-medium text-gray-900">[Nombre médico]</p>
+                                            <p className="text-sm text-gray-500">[Especialidad]</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <p>Seleccionar</p>
-                    </button>
+                    </div>
+                    
+                    )}
                 </div>
                 <div className="mt-6">
                 <div className="flex flex-col space-y-2">
