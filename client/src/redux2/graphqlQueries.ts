@@ -161,20 +161,9 @@ export const SEARCH_PATIENTS = gql`
         resourcesData {
           fullUrl
           resource {
-            active
-            address {
-              city
-              country
-              line
-              postalCode
-              state
-            }
+            birthDate
             gender
             id
-            identifier {
-              system
-              value
-            }
             meta {
               lastUpdated
               versionId
@@ -182,14 +171,9 @@ export const SEARCH_PATIENTS = gql`
             name {
               family
               given
-              prefix
-            }
-            resourceType
-            telecom {
-              system
-              value
               use
             }
+            resourceType
           }
           search {
             mode

@@ -12,14 +12,26 @@ import { useAppDispatch, useAppSelector } from '@/redux2/hooks';
 export default function AppointmentCard() {
     const dispatch = useAppDispatch();
 
-    const [selectedDoctorIsOpen, setSelectedDoctorIsOpen] = useState<boolean>(false);
-    const [selectedDoctor, setSelectedDoctor] = useState<string>('');
-
     const practitioners = useAppSelector(state => state.practitionerReducer);
     const patients = useAppSelector(state => state.patientReducer);
 
+    const [selectedPatientIsOpen, setSelectedPatientIsOpen] = useState<boolean>(false);
+    const [selectedDoctorIsOpen, setSelectedDoctorIsOpen] = useState<boolean>(false);
+    const [selectedDoctor, setSelectedDoctor] = useState<string>('');
+    const [selectedPatient, setSelectedPatient] = useState<string>('');
+    const [filteredPatients, setFilteredPatients] = useState(patients?.resourcesFound?.resourcesData || []);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+
+
     useEffect(() => {
         dispatch(searchPatients("sm"));
+        const filteredPt = patients?.resourcesFound?.resourcesData.filter(patient => 
+            patient.resource.name[0].family.includes(searchTerm) || 
+            patient.resource.name[0].given[0].includes(searchTerm)
+        );
+        setFilteredPatients(filteredPt);
      }, []);
 
     console.log("Drs", practitioners)
@@ -27,6 +39,16 @@ export default function AppointmentCard() {
     const [age, setAge] = useState('');
     const handleSelectDrButton = (event: any) => {
       setSelectedDoctorIsOpen(!selectedDoctorIsOpen)
+    };
+
+    const handleSelectPatientButton = () => {
+        setSelectedPatientIsOpen(!selectedPatientIsOpen)
+    }
+
+    const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        const doctorId = event?.target.value as string;
+        console.log("dr id", doctorId)
+        setTempSelectedDoctorId(doctorId);
     };
 
 
@@ -69,18 +91,18 @@ export default function AppointmentCard() {
                                     <div className="bg-gray-50 flex justify-center items-center h-10 px-6">
                                         <p className="text-xs font-medium tracking-wide uppercase text-gray-500">A</p>
                                     </div>
-                                    <div className="flex flex-col">
-                                   
-                                                <div className="border-t border-solid"></div>
-                                                <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6">
-                                                    <img className="w-10 h-10 object-cover block rounded-[20px] content-[url('https://s3-alpha-sig.figma.com/img/...')]" />
-                                                    <div className="ml-4">
-                                                        <p className="text-sm font-medium text-gray-900">[Nombre médico]</p>
-                                                        <p className="text-sm text-gray-500">[Especialidad]</p>
-                                                    </div>
-                                                </div>
-                                       
+                                    {practitioners?.resourcesFound?.resourcesData.map((practitioner) => (
+                                      <div className="flex flex-col ">
+                                        <div className="border-t border-solid"></div>
+                                        <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6">
+                                            <img className="w-10 h-10 object-cover block rounded-[20px] content-[url('https://s3-alpha-sig.figma.com/img/...')]" />
+                                            <div className="ml-4">
+                                                <p className="text-sm font-medium text-gray-900">{`${practitioner.resource.name[0].prefix[0]} ${practitioner.resource.name[0].given[0]} ${practitioner.resource.name[0].family}`}</p>
+                                                <p className="text-sm text-gray-500">[Especialidad]</p>
+                                            </div>
+                                        </div>
                                     </div>
+                                ))}
                                 </div>
                             </div>
                         </div>
@@ -90,17 +112,68 @@ export default function AppointmentCard() {
                 <div className="mt-6">
                 <div className="flex flex-col space-y-2">
                     <p className="text-sm font-medium text-gray-700 block">Paciente</p>
-                    <div className="flex gap-[16px]">
-                        <select id="singleSelection" data-te-select-init className="w-[132px] h-[44px] pl-4 pr-6 py-3 rounded-lg border gap-2">
-                            <option value="1">Nombre</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                            <option value="4">Four</option>
-                            <option value="5">Five</option>
-                        </select>
-                        <input className="w-[320px] h-[44px] rounded-lg border "></input>
-                        <Button className="w-[90px] h-[44px] px-[18px] py-[10px] rounded-lg border gap-2 bg-white text-gray-700 font-semibold text-sm">Buscar</Button>
-                    </div>        
+                    {!selectedPatientIsOpen ? (
+                         <div className="flex gap-[16px] ">
+                         <select
+                             className='w-[300px] border border-solid rounded-[8px]'
+                             id="doctor-select"
+                             value={setSelectedPatient}
+                         >
+                             {patients?.resourcesFound?.resourcesData.map((patient) => (
+                                 <option key={patient.resource.id} value={patient.resource.id}>
+                                     {`${patient.resource.name[0].given[0]} ${patient.resource.name[0].family}`}
+                                 </option>
+                             ))}
+                         </select>
+                         <input 
+                             className="w-[320px] h-[44px] rounded-lg border"
+                             type="text"
+                             value={searchTerm}
+                             onChange={(e) => setSearchTerm(e.target.value)}
+                         />
+                         <Button className="w-[90px] h-[44px] px-[18px] py-[10px] rounded-lg border gap-2 bg-white text-gray-700 font-semibold text-sm" onClick={handleSelectPatientButton}>Buscar</Button>
+                     </div>  
+                    ) : (
+                        <div className="w-[574px] h-[500px] border border-gray-300 rounded-[8px] bg-white z-50 absolute">
+                        <div className="flex w-full h-[74px] justify-between items-center px-4 py-2 border-b border-gray-300">
+                             <h2 className="text-gray-900 font-semibold">Selecciona un médico</h2>
+                             <button 
+                                 onClick={handleSelectPatientButton} 
+                                 className="w-[108px] h-[30px] rounded-[4px] border border-gray-400 px-4 py-2 flex items-center justify-center gap-8">
+                                 <span className="sr-only">Close</span> 
+                                 <span>×</span>
+                             </button>
+                         </div>
+
+                         <div className="p-4 h-[74px] ">
+                             <input 
+                                 type="text" 
+                                 placeholder="Search..." 
+                                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                             />
+                         </div>
+                         <div className="flex flex-col justify-start items-stretch">
+                             <div className="border bg-white">
+                                 <div className="bg-gray-50 flex justify-center items-center h-10 px-6">
+                                     <p className="text-xs font-medium tracking-wide uppercase text-gray-500">A</p>
+                                 </div>
+                                 {practitioners?.resourcesFound?.resourcesData.map((practitioner) => (
+                                   <div className="flex flex-col ">
+                                     <div className="border-t border-solid"></div>
+                                     <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6">
+                                         <img className="w-10 h-10 object-cover block rounded-[20px] content-[url('https://s3-alpha-sig.figma.com/img/...')]" />
+                                         <div className="ml-4">
+                                             <p className="text-sm font-medium text-gray-900">{`${practitioner.resource.name[0].prefix[0]} ${practitioner.resource.name[0].given[0]} ${practitioner.resource.name[0].family}`}</p>
+                                             <p className="text-sm text-gray-500">[Especialidad]</p>
+                                         </div>
+                                     </div>
+                                 </div>
+                             ))}
+                             </div>
+                         </div>
+                     </div>
+                    )}
+                         
                 </div>
                 <div className="mt-6">
                     <label className="text-sm font-medium text-gray-700 block">Tipo de atención</label>
