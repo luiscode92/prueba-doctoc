@@ -46,25 +46,44 @@ export default function AppointmentCard() {
                             <p>Seleccionar</p>
                         </button>
                     ) : (
-                        <div className="w-[574px] border border-gray-300 rounded-[8px] bg-white">
-                        <div className="flex flex-col justify-start items-stretch">
-                            <div className="border bg-white mt-4">
-                                <div className="bg-gray-50 flex justify-center items-center h-10 px-6">
-                                    <p className="text-xs font-medium tracking-wide uppercase text-gray-500">A</p>
-                                </div>
-                                <div className="flex flex-col">
-                                    <div className="border-t border-solid"></div>
-                                    <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6">
-                                        <img className="w-10 h-10 object-cover block rounded-[20px] content-[url('https://s3-alpha-sig.figma.com/img/...')]" />
-                                        <div className="ml-4">
-                                            <p className="text-sm font-medium text-gray-900">[Nombre médico]</p>
-                                            <p className="text-sm text-gray-500">[Especialidad]</p>
-                                        </div>
+                        <div className="w-[574px] h-[500px] border border-gray-300 rounded-[8px] bg-white z-50 absolute">
+                           <div className="flex w-full h-[74px] justify-between items-center px-4 py-2 border-b border-gray-300">
+                                <h2 className="text-gray-900 font-semibold">Selecciona un médico</h2>
+                                <button 
+                                    onClick={handleSelectDrButton} 
+                                    className="w-[108px] h-[30px] rounded-[4px] border border-gray-400 px-4 py-2 flex items-center justify-center gap-8">
+                                    <span className="sr-only">Close</span> 
+                                    <span>×</span>
+                                </button>
+                            </div>
+
+                            <div className="p-4 h-[74px] ">
+                                <input 
+                                    type="text" 
+                                    placeholder="Search..." 
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                />
+                            </div>
+                            <div className="flex flex-col justify-start items-stretch">
+                                <div className="border bg-white">
+                                    <div className="bg-gray-50 flex justify-center items-center h-10 px-6">
+                                        <p className="text-xs font-medium tracking-wide uppercase text-gray-500">A</p>
+                                    </div>
+                                    <div className="flex flex-col">
+                                   
+                                                <div className="border-t border-solid"></div>
+                                                <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6">
+                                                    <img className="w-10 h-10 object-cover block rounded-[20px] content-[url('https://s3-alpha-sig.figma.com/img/...')]" />
+                                                    <div className="ml-4">
+                                                        <p className="text-sm font-medium text-gray-900">[Nombre médico]</p>
+                                                        <p className="text-sm text-gray-500">[Especialidad]</p>
+                                                    </div>
+                                                </div>
+                                       
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     
                     )}
                 </div>

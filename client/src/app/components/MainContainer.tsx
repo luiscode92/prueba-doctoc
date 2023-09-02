@@ -146,7 +146,9 @@ export default function MainContainer() {
                    
                 </div>
             </div>
-            {isOpen && <AppointmentCard/>}
+            <div className="relative">
+                {isOpen && <AppointmentCard/>}
+            </div>
             
         </div>
     )
