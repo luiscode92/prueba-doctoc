@@ -15,8 +15,13 @@ export default function AppointmentCard() {
     const practitioners = useAppSelector(state => state.practitionerReducer);
     const patients = useAppSelector(state => state.patientReducer);
 
+    //const [selectedPatient, setSelectedPatient] = useState<string>('');
+  //  const [selectedDoctor, setSelectedDoctor] = useState<string>('');
+
     const [selectedPatientIsOpen, setSelectedPatientIsOpen] = useState<boolean>(false);
     const [selectedDoctorIsOpen, setSelectedDoctorIsOpen] = useState<boolean>(false);
+    const [selectedPatientIsSelected, setSelectedPatientIsSelected] = useState<boolean>(false);
+    const [selectedDoctorIsSelected, setSelectedDoctorIsSelected] = useState<boolean>(false);
     const [selectedDoctor, setSelectedDoctor] = useState<string>('');
     const [selectedPatient, setSelectedPatient] = useState<string>('');
     const [filteredPatients, setFilteredPatients] = useState(patients?.resourcesFound?.resourcesData || []);
@@ -50,6 +55,10 @@ export default function AppointmentCard() {
         console.log("dr id", doctorId)
         setTempSelectedDoctorId(doctorId);
     };
+
+    const handleSelectedPractitioner = () => {
+
+    }
 
 
     return (
@@ -92,9 +101,9 @@ export default function AppointmentCard() {
                                         <p className="text-xs font-medium tracking-wide uppercase text-gray-500">A</p>
                                     </div>
                                     {practitioners?.resourcesFound?.resourcesData.map((practitioner) => (
-                                      <div className="flex flex-col ">
+                                    <div className="flex flex-col  ">
                                         <div className="border-t border-solid"></div>
-                                        <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6">
+                                        <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6 hover:bg-[#F0F5FA] cursor-pointer">
                                             <img className="w-10 h-10 object-cover block rounded-[20px] content-[url('https://s3-alpha-sig.figma.com/img/...')]" />
                                             <div className="ml-4">
                                                 <p className="text-sm font-medium text-gray-900">{`${practitioner.resource.name[0].prefix[0]} ${practitioner.resource.name[0].given[0]} ${practitioner.resource.name[0].family}`}</p>
@@ -136,7 +145,7 @@ export default function AppointmentCard() {
                     ) : (
                         <div className="w-[574px] h-[500px] border border-gray-300 rounded-[8px] bg-white z-50 absolute">
                         <div className="flex w-full h-[74px] justify-between items-center px-4 py-2 border-b border-gray-300">
-                             <h2 className="text-gray-900 font-semibold">Selecciona un médico</h2>
+                             <h2 className="text-gray-900 font-semibold">Selecciona un paciente</h2>
                              <button 
                                  onClick={handleSelectPatientButton} 
                                  className="w-[108px] h-[30px] rounded-[4px] border border-gray-400 px-4 py-2 flex items-center justify-center gap-8">
@@ -155,7 +164,7 @@ export default function AppointmentCard() {
                          <div className="flex flex-col justify-start items-stretch">
                              <div className="border bg-white">
                                  <div className="bg-gray-50 flex justify-center items-center h-10 px-6">
-                                     <p className="text-xs font-medium tracking-wide uppercase text-gray-500">A</p>
+                                     <p className="text-xs font-medium tracking-wide uppercase text-gray-500">{searchTerm}</p>
                                  </div>
                                  {practitioners?.resourcesFound?.resourcesData.map((practitioner) => (
                                    <div className="flex flex-col ">

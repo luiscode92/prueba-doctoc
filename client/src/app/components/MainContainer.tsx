@@ -11,7 +11,7 @@ import {
     // other hooks..
 } from '@/redux2/features/appointmentSlice';
 import {searchPractitioner} from '@/redux2/features/practitionerSlice'
-import AppointmentCard from './AppointmentCard';
+import AppointmentCard from './createAppointment/AppointmentCard';
 import PatientCard from './PatientCard';
 
 
