@@ -93,9 +93,31 @@ type ResourcesData {
     resource: Patient!
     search: Search
 }
+
+####Patient####
 type searchPatientsResponse {
     operation: String!
-    resourcesFound: ResourcesFoundType!
+    resourcesFound: PatientResourcesFound!
+}
+
+type PatientResourcesFound {
+    quantity: Int
+    resourcesData: [PatientResoultData]
+}
+
+type PatientResoultData {
+    fullUrl: String
+    resource: PatientResult
+    search: Search
+}
+
+type PatientResult {
+    birthDate: String
+    gender: String
+    id: String
+    meta: Meta
+    name: [PatientName]
+    resourceType: String
 }
 
 type PatientName {
@@ -109,13 +131,12 @@ type PatientMeta {
     versionId: String!
 }
 
-
 type Search {
     mode: String
 }
 
 
-##serachDoctor
+####Doctor####
 type SearchPracticionerResponse {
     operation: String!
     resourcesFound: ResourcesFoundType!
@@ -132,6 +153,7 @@ type PractitionerResoultData {
     resource: PractitionerResult
     search: Search
 }
+
 type PractitionerResult {
     active: Boolean
     address: [Address]

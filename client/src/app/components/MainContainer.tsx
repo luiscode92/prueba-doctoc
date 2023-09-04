@@ -110,7 +110,7 @@ export default function MainContainer() {
                             <div className=" flex items-center w-[300px] h-[44px] p-[10px] px-[18px] rounded-[8px] border border-solid space-x-[8px] flex overflow-hidden">
                                 <img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50" className='h-[24px] w-[24px] rounded-full' alt="" />   
                                 <select
-                                    className='w-[300px]'
+                                    className='w-[300px] text-black'
                                     id="doctor-select"
                                     value={tempSelectedDoctorId}
                                     onChange={handleSelectChange}

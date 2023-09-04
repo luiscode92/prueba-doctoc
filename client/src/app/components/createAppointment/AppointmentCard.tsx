@@ -8,15 +8,17 @@ import {
 import {searchPatients} from '@/redux2/features/patientSlice'
 import {searchPractitioner} from '@/redux2/features/practitionerSlice'
 import { useAppDispatch, useAppSelector } from '@/redux2/hooks';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import TimePicker from 'react-time-picker';
+import 'react-time-picker/dist/TimePicker.css';
+import Image from "next/image";
 
 export default function AppointmentCard() {
     const dispatch = useAppDispatch();
 
     const practitioners = useAppSelector(state => state.practitionerReducer);
     const patients = useAppSelector(state => state.patientReducer);
-
-    //const [selectedPatient, setSelectedPatient] = useState<string>('');
-  //  const [selectedDoctor, setSelectedDoctor] = useState<string>('');
 
     const [selectedPatientIsOpen, setSelectedPatientIsOpen] = useState<boolean>(false);
     const [selectedDoctorIsOpen, setSelectedDoctorIsOpen] = useState<boolean>(false);
@@ -27,8 +29,9 @@ export default function AppointmentCard() {
     const [filteredPatients, setFilteredPatients] = useState(patients?.resourcesFound?.resourcesData || []);
     const [searchTerm, setSearchTerm] = useState("");
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const [time, setTime] = useState('10:00');
 
-
+    const [startDate, setStartDate] = useState(new Date());
 
     useEffect(() => {
         dispatch(searchPatients("sm"));
@@ -50,41 +53,61 @@ export default function AppointmentCard() {
         setSelectedPatientIsOpen(!selectedPatientIsOpen)
     }
 
-    const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        const doctorId = event?.target.value as string;
-        console.log("dr id", doctorId)
-        setTempSelectedDoctorId(doctorId);
-    };
-
-    const handleSelectedPractitioner = () => {
-
+    const handleSubmit =() => {
+        console.log(selectedPatient)
     }
+
+    const handleSelectedDoctor = () => {
+        setSelectedPatientIsSelected(true)
+        handleSelectDrButton(false)
+    }
+
+
+    
 
 
     return (
         <div className="bg-white w-[622px] h-screen flex flex-col">
             <div className="h-[77px] flex items-center border-t-8 border-primary-700">
-                <h1 className="font-inter text-left text-lg font-semibold leading-7 tracking-normal ml-[24px]">Nueva cita</h1>
+                <h1 className="font-inter text-left text-lg text-black font-semibold leading-7 tracking-normal ml-[24px]">Nueva cita</h1>
             </div>
             <div className="border-t border-gray-200 p-[24px] flex-grow overflow-y-auto">
                 <div className="flex flex-col space-y-2">
-                    <p className="text-sm font-medium text-gray-700 block">Médico</p>
-                    {!selectedDoctorIsOpen ? (
+                    <p className="text-sm font-medium text-black block">Médico</p>
+                    {!selectedPatientIsSelected ? (
                         <button onClick={handleSelectDrButton} className="w-[156px] h-[44px] rounded-[8px] bg-white text-gray-700 border border-gray-300 font-semibold text-sm flex items-center justify-center gap-[8px]">
                             <div className="flex ">
                                 <LaunchIcon className="w-[20px] h-[20px]"/>
                             </div>
                             <p>Seleccionar</p>
                         </button>
-                    ) : (
+                            ) : (
+                                <div className={`bg-[white] flex justify-start items-stretch flex-col grow-0 shrink-0 basis-auto box-border`}>
+                                    <p className={`grow-0 shrink-0 basis-auto box-border [font-family:Inter] text-sm font-medium text-[#344054]`}>Médico</p>
+                                    <div className={`flex justify-start items-stretch flex-row h-11 grow-0 shrink-0 basis-auto box-border mt-1.5`}>
+                                    <div
+                                        className={`border shadow-[0px_1px_2px_rgba(16,24,40,0.05)] bg-gray-50 flex justify-start items-center flex-row grow shrink-0 basis-auto box-border px-3.5 rounded-lg border-[#d0d5dd] border-solid`}
+                                        >  
+                                    <p className={`grow-0 shrink-0 basis-auto box-border [font-family:Inter] text-base font-normal text-[#667085] ml-2`}>Pedro Perez</p>
+                                    </div>
+                                    
+                                    <button
+                                        className={`w-[102px] h-11 grow-0 shrink-0 basis-auto box-border border bg-[white] shadow-[0px_1px_2px_rgba(16,24,40,0.05)] [font-family:Inter] text-base font-semibold text-[#344054] cursor-pointer block ml-3 rounded-lg border-[#d0d5dd] border-solid`}
+                                    >
+                                        Cambiar
+                                    </button>
+                                    </div>
+                                </div>
+                            )}
+
+                    {selectedDoctorIsOpen && (
                         <div className="w-[574px] h-[500px] border border-gray-300 rounded-[8px] bg-white z-50 absolute">
                            <div className="flex w-full h-[74px] justify-between items-center px-4 py-2 border-b border-gray-300">
                                 <h2 className="text-gray-900 font-semibold">Selecciona un médico</h2>
                                 <button 
                                     onClick={handleSelectDrButton} 
                                     className="w-[108px] h-[30px] rounded-[4px] border border-gray-400 px-4 py-2 flex items-center justify-center gap-8">
-                                    <span className="sr-only">Close</span> 
-                                    <span>×</span>
+                                    <span>X</span>
                                 </button>
                             </div>
 
@@ -101,21 +124,20 @@ export default function AppointmentCard() {
                                         <p className="text-xs font-medium tracking-wide uppercase text-gray-500">A</p>
                                     </div>
                                     {practitioners?.resourcesFound?.resourcesData.map((practitioner) => (
-                                    <div className="flex flex-col  ">
-                                        <div className="border-t border-solid"></div>
-                                        <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6 hover:bg-[#F0F5FA] cursor-pointer">
-                                            <img className="w-10 h-10 object-cover block rounded-[20px] content-[url('https://s3-alpha-sig.figma.com/img/...')]" />
-                                            <div className="ml-4">
-                                                <p className="text-sm font-medium text-gray-900">{`${practitioner.resource.name[0].prefix[0]} ${practitioner.resource.name[0].given[0]} ${practitioner.resource.name[0].family}`}</p>
-                                                <p className="text-sm text-gray-500">[Especialidad]</p>
+                                        <div className="flex flex-col">
+                                            <div className="border-t border-solid"></div>
+                                            <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6 hover:bg-[#F0F5FA] cursor-pointer bg-lime-500" onClick={handleSelectedDoctor}>
+                                                <img width={10} height={10} className="object-cover block rounded-[20px]"  src={`${practitioner.fullUrl}`} alt="dr img"/>
+                                                <div className="ml-4">
+                                                    <p className="text-sm font-medium text-gray-900">{`${practitioner.resource.name[0].prefix[0]} ${practitioner.resource.name[0].given[0]} ${practitioner.resource.name[0].family}`}</p>
+                                                    <p className="text-sm text-gray-500">[Especialidad]</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
                                 </div>
                             </div>
                         </div>
-                    
                     )}
                 </div>
                 <div className="mt-6">
@@ -124,7 +146,7 @@ export default function AppointmentCard() {
                     {!selectedPatientIsOpen ? (
                          <div className="flex gap-[16px] ">
                          <select
-                             className='w-[300px] border border-solid rounded-[8px]'
+                             className=' text-gray-700  w-[300px] border border-solid rounded-[8px]'
                              id="doctor-select"
                              value={setSelectedPatient}
                          >
@@ -135,7 +157,7 @@ export default function AppointmentCard() {
                              ))}
                          </select>
                          <input 
-                             className="w-[320px] h-[44px] rounded-lg border"
+                             className="w-[320px] text-gray-700  h-[44px] rounded-lg border"
                              type="text"
                              value={searchTerm}
                              onChange={(e) => setSearchTerm(e.target.value)}
@@ -181,54 +203,43 @@ export default function AppointmentCard() {
                              </div>
                          </div>
                      </div>
-                    )}
-                         
+                    )}         
                 </div>
+
                 <div className="mt-6">
                     <label className="text-sm font-medium text-gray-700 block">Tipo de atención</label>
                     <select id="singleSelection" 
                             data-te-select-init 
-                            className="w-[574px] h-[44px] px-4 py-3 rounded-lg border gap-2">
-                        <option value="1">Nombre</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                        <option value="4">Four</option>
-                        <option value="5">Five</option>
+                            className="w-[574px] text-gray-700  h-[44px] px-4 py-3 rounded-lg border gap-2">
+                        <option value="remote-consultation">Consulta remota</option>
+                        <option value="onsite-consultation">Consulta presencial</option>
                     </select>
 
                 </div>
-                <div className="flex space-x-4 mt-6 gap-[21px]">
+
+                <div className="flex  space-x-4 mt-6 gap-[21px]">
                     <div>
                         <label className="text-sm font-medium text-gray-700 block">Fecha</label>
-                        <Input
-                            slotProps={{
-                            root: { className: "border rounded-md p-2 flex items-center" },
-                            input: {
-                                className: "border-none focus:border-none focus:ring-0",
-                                placeholder: "dd/mm/aaaa",
-                                type: "text",
-                            },
-                            }}
+                        <DatePicker 
+
+                            selected={startDate} 
+                            onChange={date => setStartDate(date)} 
+                            className="w-[276.5px] h-[44px] px-3.5 py-3 text-gray-700  rounded-lg border gap-2"
                         />
                     </div>
                     <div>
-                        <label className="text-sm font-medium text-gray-700 block">Hora</label>
-                        <select id="singleSelection" 
-                                data-te-select-init 
-                                className="w-[276.5px] h-[44px] px-3.5 py-3 rounded-lg border gap-2">
-                            <option value="1">Nombre</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                            <option value="4">Four</option>
-                            <option value="5">Five</option>
-                        </select>
+                        <label className="text-sm font-medium text-gray-700 ">Hora</label>
+                        <div className="rounded-lg border w-[100px]">
+                            <TimePicker className="text-gray-700" onChange={setTime} value={time} />
+                        </div>
                     </div>
                 </div>
-                </div>
+
+            </div>
             </div>
             <div className="flex flex-row items-center justify-between h-18 pr-6 pl-6 gap-2 box-border  mt-auto">
                 <p className="flex-shrink-0 text-red-600 font-semibold text-sm">Cancelar</p>
-                <Button className="flex-shrink-0 w-25 h-10 text-white font-semibold text-sm bg-teal-600 border border-teal-700 rounded-lg shadow-sm cursor-pointer">Confirmar</Button>
+                <Button onClick={handleSubmit} type="submit" className="flex-shrink-0 w-25 h-10 text-white font-semibold text-sm bg-teal-600 border border-teal-700 rounded-lg shadow-sm cursor-pointer">Confirmar</Button>
             </div>
 
         </div>
