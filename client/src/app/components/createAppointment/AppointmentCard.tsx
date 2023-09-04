@@ -27,6 +27,7 @@ export default function AppointmentCard() {
     const [searchTerm, setSearchTerm] = useState("");
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const [time, setTime] = useState('10:00');
+    const [serviceType, setServiceType] = useState<string>('');
 
     const [startDate, setStartDate] = useState('');
 
@@ -53,36 +54,50 @@ export default function AppointmentCard() {
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        // 1. Gather data from state or form fields
         const appointmentStartTime = new Date(startDate);
-        appointmentStartTime.setHours(time.split(':')[0], time.split(':')[1], 0);  // Assuming time is "HH:MM"
+        appointmentStartTime.setHours(time.split(':')[0], time.split(':')[1], 0);  
         
         const appointmentEndTime = new Date(appointmentStartTime);
-        appointmentEndTime.setHours(appointmentStartTime.getHours() + 1); // Example: Assuming each appointment lasts 1 hour
+        appointmentEndTime.setHours(appointmentStartTime.getHours() + 1);
     
         const appointmentData = {
             input: {
-                start: appointmentStartTime.toISOString(),
-                end: appointmentEndTime.toISOString(),
-                participant: [
-                    {
-                        actor: {
-                            reference: `Practitioner/${selectedDoctor}`,
+                resourceType: "Appointment",
+                resourceData: {
+                    resourceType: "Appointment",
+                    status: "proposed",
+                    serviceType: [
+                        {
+                            coding: [
+                                {
+                                    system: "http://example.com/telemedicine",
+                                    code: `${serviceType}`,
+                                    display: "Remote Consultation"
+                                }
+                            ]
+                        }
+                    ],
+                    start: ``,
+                    end: ``,
+                    participant: [
+                        {
+                            actor: {
+                                reference: `Practitioner/${selectedDoctor}`
+                            },
+                            status: "accepted"
                         },
-                        status: 'accepted'
-                    },
-                    {
-                        actor: {
-                            reference: `Patient/${selectedPatient}`,
-                        },
-                        status: 'accepted'
-                    }
-                ],
-                // Add other necessary fields if needed
-            }
+                        {
+                            actor: {
+                                reference: `Practitioner/${selectedPatient}`
+                            },
+                            status: "accepted"
+                        }
+                    ]
+                }
+              }
         };
     
-        // 2. Data validation
+
         if (!selectedDoctor) {
             alert("Please select a doctor.");
             return;
@@ -96,7 +111,7 @@ export default function AppointmentCard() {
             return;
         }
     
-        // 3. Dispatch action to create an appointment
+
         try {
             await dispatch(createAppointment(appointmentData));
             alert("Appointment created successfully!");
@@ -107,9 +122,10 @@ export default function AppointmentCard() {
     };
     
 
-    const handleSelectedDoctor = () => {
+    const handleSelectedDoctor = (Dr) => {
         setSelectedDoctorIsSelected(true)
         handleSelectDrButton(false)
+        setSelectedDoctor(Dr)
     }
 
     const handleSelectedPatient = () => {
@@ -142,7 +158,7 @@ export default function AppointmentCard() {
                                     <div
                                         className="border shadow-[0px_1px_2px_rgba(16,24,40,0.05)] bg-gray-50 flex justify-start items-center flex-row grow shrink-0 basis-auto box-border px-3.5 rounded-lg border-[#d0d5dd] border-solid"
                                         >  
-                                    <p className="grow-0 shrink-0 basis-auto box-border [font-family:Inter] text-base font-normal text-[#667085] ml-2">Pedro Perez</p>
+                                    <p className="grow-0 shrink-0 basis-auto box-border [font-family:Inter] text-base font-normal text-[#667085] ml-2">{selectedDoctor}</p>
                                     </div>
                                     
                                     <button
@@ -177,18 +193,21 @@ export default function AppointmentCard() {
                                     <div className="bg-gray-50 flex justify-center items-center h-10 px-6">
                                         <p className="text-xs font-medium tracking-wide uppercase text-gray-500">A</p>
                                     </div>
-                                    {practitioners?.resourcesFound?.resourcesData.map((practitioner) => (
+                                    {practitioners?.resourcesFound?.resourcesData.map((practitioner) => {
+
+                                        const Dr = `${practitioner.resource.name[0].prefix[0]} ${practitioner.resource.name[0].given[0]} ${practitioner.resource.name[0].family}`
+                                        return (
                                         <div className="flex flex-col">
                                             <div className="border-t border-solid"></div>
-                                            <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6 hover:bg-[#F0F5FA] cursor-pointer " onClick={handleSelectedDoctor}>
+                                            <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6 hover:bg-[#F0F5FA] cursor-pointer " onClick={handleSelectedDoctor(Dr)}>
                                                 <img width={10} height={10} className="object-cover block rounded-[20px]"  src={`${practitioner.fullUrl}`} alt="dr img"/>
                                                 <div className="ml-4">
-                                                    <p className="text-sm font-medium text-gray-900">{`${practitioner.resource.name[0].prefix[0]} ${practitioner.resource.name[0].given[0]} ${practitioner.resource.name[0].family}`}</p>
+                                                    <p className="text-sm font-medium text-gray-900">{Dr}</p>
                                                     <p className="text-sm text-gray-500">[Especialidad]</p>
                                                 </div>
                                             </div>
                                         </div>
-                                    ))}
+                                    )})}
                                 </div>
                             </div>
                         </div>
@@ -229,7 +248,7 @@ export default function AppointmentCard() {
                                     />
                                 </div>
                                 <div className="grow-0 shrink-0 basis-auto box-border ml-3">
-                                    <p className="box-border [font-family:Inter] text-sm font-medium text-[#101828]">[Nombre paciente]</p>
+                                    <p className="box-border [font-family:Inter] text-sm font-medium text-[#101828]">{selectedPatient}</p>
                                     <p className="box-border [font-family:Inter] text-sm font-normal text-[#475467]">[Tipo y N° doc]</p>
                                 </div>
                                 </div>
@@ -289,8 +308,11 @@ export default function AppointmentCard() {
                     <div className="mt-6">
                         <label className="text-sm font-medium text-gray-700 block">Tipo de atención</label>
                         <select id="singleSelection" 
+                                value={serviceType} 
+                                onChange={event => setServiceType(event)} 
                                 data-te-select-init 
-                                className="w-[574px] text-gray-700  h-[44px] px-4 py-3 rounded-lg border gap-2">
+                                className="w-[574px] text-gray-700  h-[44px] px-4 py-3 rounded-lg border gap-2"
+                        >
                             <option value="remote-consultation">Consulta remota</option>
                             <option value="onsite-consultation">Consulta presencial</option>
                         </select>
