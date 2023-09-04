@@ -8,6 +8,7 @@ import {
 import {searchPatients} from '@/redux2/features/patientSlice'
 import {searchPractitioner} from '@/redux2/features/practitionerSlice'
 import { useAppDispatch, useAppSelector } from '@/redux2/hooks';
+import { createAppointment } from "@/redux2/features/appointmentSlice";
 
 
 export default function AppointmentCard() {
@@ -49,13 +50,71 @@ export default function AppointmentCard() {
         setSelectedPatientIsOpen(!selectedPatientIsOpen)
     }
 
-    const handleSubmit =() => {
-        console.log(selectedPatient)
-    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        // 1. Gather data from state or form fields
+        const appointmentStartTime = new Date(startDate);
+        appointmentStartTime.setHours(time.split(':')[0], time.split(':')[1], 0);  // Assuming time is "HH:MM"
+        
+        const appointmentEndTime = new Date(appointmentStartTime);
+        appointmentEndTime.setHours(appointmentStartTime.getHours() + 1); // Example: Assuming each appointment lasts 1 hour
+    
+        const appointmentData = {
+            input: {
+                start: appointmentStartTime.toISOString(),
+                end: appointmentEndTime.toISOString(),
+                participant: [
+                    {
+                        actor: {
+                            reference: `Practitioner/${selectedDoctor}`,
+                        },
+                        status: 'accepted'
+                    },
+                    {
+                        actor: {
+                            reference: `Patient/${selectedPatient}`,
+                        },
+                        status: 'accepted'
+                    }
+                ],
+                // Add other necessary fields if needed
+            }
+        };
+    
+        // 2. Data validation
+        if (!selectedDoctor) {
+            alert("Please select a doctor.");
+            return;
+        }
+        if (!selectedPatient) {
+            alert("Please select a patient.");
+            return;
+        }
+        if (!startDate || !time) {
+            alert("Please select a valid date and time.");
+            return;
+        }
+    
+        // 3. Dispatch action to create an appointment
+        try {
+            await dispatch(createAppointment(appointmentData));
+            alert("Appointment created successfully!");
+        } catch (error) {
+            console.error("Error creating appointment:", error);
+            alert("Error creating appointment. Please try again.");
+        }
+    };
+    
 
     const handleSelectedDoctor = () => {
-        setSelectedPatientIsSelected(true)
+        setSelectedDoctorIsSelected(true)
         handleSelectDrButton(false)
+    }
+
+    const handleSelectedPatient = () => {
+        setSelectedPatientIsSelected(true)
+        setSelectedPatientIsOpen(!selectedPatientIsOpen)
     }
 
 
@@ -70,7 +129,7 @@ export default function AppointmentCard() {
             <div className="border-t border-gray-200 p-[24px] flex-grow overflow-y-auto">
                 <div className="flex flex-col space-y-2">
                     <p className="text-sm font-medium text-black block">Médico</p>
-                    {!selectedPatientIsSelected ? (
+                    {!selectedDoctorIsSelected ? (
                         <button onClick={handleSelectDrButton} className="w-[156px] h-[44px] rounded-[8px] bg-white text-gray-700 border border-gray-300 font-semibold text-sm flex items-center justify-center gap-[8px]">
                             <div className="flex ">
                                 <LaunchIcon className="w-[20px] h-[20px]"/>
@@ -121,7 +180,7 @@ export default function AppointmentCard() {
                                     {practitioners?.resourcesFound?.resourcesData.map((practitioner) => (
                                         <div className="flex flex-col">
                                             <div className="border-t border-solid"></div>
-                                            <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6 hover:bg-[#F0F5FA] cursor-pointer bg-lime-500" onClick={handleSelectedDoctor}>
+                                            <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6 hover:bg-[#F0F5FA] cursor-pointer " onClick={handleSelectedDoctor}>
                                                 <img width={10} height={10} className="object-cover block rounded-[20px]"  src={`${practitioner.fullUrl}`} alt="dr img"/>
                                                 <div className="ml-4">
                                                     <p className="text-sm font-medium text-gray-900">{`${practitioner.resource.name[0].prefix[0]} ${practitioner.resource.name[0].given[0]} ${practitioner.resource.name[0].family}`}</p>
@@ -138,7 +197,7 @@ export default function AppointmentCard() {
                 <div className="mt-6">
                     <div className="flex flex-col space-y-2">
                         <p className="text-sm font-medium text-gray-700 block">Paciente</p>
-                        {!selectedDoctorIsSelected ? (
+                        {!selectedPatientIsSelected ? (
                             <div className="flex gap-[16px] ">
                             <select
                                 className=' text-gray-700  w-[300px] border border-solid rounded-[8px]'
@@ -161,24 +220,23 @@ export default function AppointmentCard() {
                             <Button className="w-[90px] h-[44px] px-[18px] py-[10px] rounded-lg border gap-2 bg-white text-gray-700 font-semibold text-sm" onClick={handleSelectPatientButton}>Buscar</Button>
                         </div> 
                         ) : (
-                            <div className={`flex justify-start items-stretch flex-col grow-0 shrink-0 basis-auto box-border`}>
-                            <p className={`grow-0 shrink-0 basis-auto box-border [font-family:Inter] text-sm font-medium text-[#344054]`}>Paciente</p>
-                            <div className={`bg-[white] flex justify-start items-stretch flex-row h-[72px] grow-0 shrink-0 basis-auto box-border mt-1.5`}>
-                            <div className={`border flex justify-start items-start flex-row grow shrink-0 basis-auto box-border px-6 py-4 rounded-xl border-[#eaecf0] border-solid`}>
-                                <div className={`grow-0 shrink-0 basis-auto box-border`}>
+                            <div className="flex justify-start items-stretch flex-col grow-0 shrink-0 basis-auto box-border">
+                            <div className="bg-[white] flex justify-start items-stretch flex-row h-[72px] grow-0 shrink-0 basis-auto box-border mt-1.5">
+                            <div className="border flex justify-start items-start flex-row grow shrink-0 basis-auto box-border px-6 py-4 rounded-xl border-[#eaecf0] border-solid">
+                                <div className="grow-0 shrink-0 basis-auto box-border">
                                     <img
-                                    className={`w-10 h-10 max-w-[initial] box-border object-cover block rounded-[200px] border-[none] content-[url('https://s3-alpha-sig.figma.com/img/2f11/9087/0d753151f58657595136f67c584b5c8c?Expires=1694390400&Signature=XkX1bGjHnkFapnRPSqo7oXWS8zAvsR7voJEr6220p96d2BF0Mslt7WEMYDH1OdpAP79VxXgWT6DXHX~fh4ZckXpM4OaK~EvQuEeSQ3~O9Fxwv0819e~KEVg1V~zLOJndMdTpYxB-A7Ba9DMFqVTO~1bzKokLF8THwHjaTo-D2rs-QrNOm-Z~fgd6~rokL8HcAMsjrFasFb6g8vChbq8ABMkSityWxlWGL9QpX4KFgw9lgozSWtqemq5dMhZN4~cajBdYqQDN02q8451Jb5Ccb9dV3BHPboMfD2KtBhcrZZZjd3hcaiBy~Fdv0OyuprWrDu-PAeJQZfSmN6BjuAOqOQ\_\_&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4')]`}
+                                    className="w-10 h-10 max-w-[initial] box-border object-cover block rounded-[200px] border-[none] content-[url('https://s3-alpha-sig.figma.com/img/2f11/9087/0d753151f58657595136f67c584b5c8c?Expires=1694390400&Signature=XkX1bGjHnkFapnRPSqo7oXWS8zAvsR7voJEr6220p96d2BF0Mslt7WEMYDH1OdpAP79VxXgWT6DXHX~fh4ZckXpM4OaK~EvQuEeSQ3~O9Fxwv0819e~KEVg1V~zLOJndMdTpYxB-A7Ba9DMFqVTO~1bzKokLF8THwHjaTo-D2rs-QrNOm-Z~fgd6~rokL8HcAMsjrFasFb6g8vChbq8ABMkSityWxlWGL9QpX4KFgw9lgozSWtqemq5dMhZN4~cajBdYqQDN02q8451Jb5Ccb9dV3BHPboMfD2KtBhcrZZZjd3hcaiBy~Fdv0OyuprWrDu-PAeJQZfSmN6BjuAOqOQ\_\_&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4')]"
                                     />
                                 </div>
-                                <div className={`grow-0 shrink-0 basis-auto box-border ml-3`}>
-                                    <p className={`box-border [font-family:Inter] text-sm font-medium text-[#101828]`}>[Nombre paciente]</p>
-                                    <p className={`box-border [font-family:Inter] text-sm font-normal text-[#475467]`}>[Tipo y N° doc]</p>
+                                <div className="grow-0 shrink-0 basis-auto box-border ml-3">
+                                    <p className="box-border [font-family:Inter] text-sm font-medium text-[#101828]">[Nombre paciente]</p>
+                                    <p className="box-border [font-family:Inter] text-sm font-normal text-[#475467]">[Tipo y N° doc]</p>
                                 </div>
                                 </div>
-                                <div className={`flex justify-center items-stretch flex-col grow-0 shrink-0 basis-auto box-border px-2`}>
+                                <div className="flex justify-center items-stretch flex-col grow-0 shrink-0 basis-auto box-border px-2">
                                     {/* Button Component is detected here. We've generated code using HTML. See other options in "Component library" dropdown in Settings */}
                                     <button
-                                    className={`w-[102px] h-11 grow-0 shrink-0 basis-auto box-border border bg-[white] shadow-[0px_1px_2px_rgba(16,24,40,0.05)] [font-family:Inter] text-base font-semibold text-[#344054] cursor-pointer block rounded-lg border-[#d0d5dd] border-solid`}
+                                    className="w-[102px] h-11 grow-0 shrink-0 basis-auto box-border border bg-[white] shadow-[0px_1px_2px_rgba(16,24,40,0.05)] [font-family:Inter] text-base font-semibold text-[#344054] cursor-pointer block rounded-lg border-[#d0d5dd] border-solid"
                                     >
                                     Cambiar
                                     </button>
@@ -210,14 +268,14 @@ export default function AppointmentCard() {
                                     <div className="bg-gray-50 flex justify-center items-center h-10 px-6">
                                         <p className="text-xs font-medium tracking-wide uppercase text-gray-500">{searchTerm}</p>
                                     </div>
-                                    {practitioners?.resourcesFound?.resourcesData.map((practitioner) => (
+                                    {patients?.resourcesFound?.resourcesData.map((patient) => (
                                     <div className="flex flex-col ">
                                         <div className="border-t border-solid"></div>
-                                        <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6">
+                                        <div className="flex justify-start items-start h-[73px] border-b border-solid pt-4 px-6 hover:bg-[#F0F5FA] cursor-pointer" onClick={handleSelectedPatient}>
                                             <img className="w-10 h-10 object-cover block rounded-[20px] content-[url('https://s3-alpha-sig.figma.com/img/...')]" />
                                             <div className="ml-4">
-                                                <p className="text-sm font-medium text-gray-900">{`${practitioner.resource.name[0].prefix[0]} ${practitioner.resource.name[0].given[0]} ${practitioner.resource.name[0].family}`}</p>
-                                                <p className="text-sm text-gray-500">[Especialidad]</p>
+                                                <p className="text-sm font-medium text-gray-900"> {`${patient.resource.name[0].given[0]} ${patient.resource.name[0].family}`}</p>
+                                                <p className="text-sm text-gray-500">[Tipo y N° documento]</p>
                                             </div>
                                         </div>
                                     </div>
@@ -239,9 +297,9 @@ export default function AppointmentCard() {
 
                     </div>
 
-                    <div className="flex  space-x-4 mt-6 gap-[21px]">
+                    <div className="flex space-x-4 mt-6 gap-[21px]">
                         <div>
-                            <label className="text-sm font-medium text-gray-700 block">Fecha</label>
+                            <label className="text-sm font-medium text-gray-700">Fecha</label>
                             <input type="date"  
                                 value={startDate} 
                                 onChange={date => setStartDate(date)}   
@@ -250,12 +308,12 @@ export default function AppointmentCard() {
                         </div>
                         <div>
                             <label className="text-sm font-medium text-gray-700 ">Hora</label>
-                            <div className="rounded-lg border w-[100px]">
-                                <input className="text-gray-700 w-[276.5px] h-[44px] px-3.5 py-3 rounded-lg border gap-2" type="time" id="appt" name="appt"  value={time} onChange={(e) => setTime(e.target.value)}/>
-                            </div>
+                            <input className="text-gray-700 w-[276.5px] h-[44px] px-3.5 py-3 rounded-lg border gap-2" 
+                                type="time" id="appt" name="appt"  value={time} 
+                                onChange={(e) => setTime(e.target.value)}
+                            />  
                         </div>
                     </div>
-
                 </div>
             </div>
             <div className="flex flex-row items-center justify-between h-18 pr-6 pl-6 gap-2 box-border  mt-auto">
